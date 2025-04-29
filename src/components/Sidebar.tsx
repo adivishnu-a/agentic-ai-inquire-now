@@ -4,12 +4,22 @@ import { Separator } from "@/components/ui/separator";
 import { BarChart3, LineChart, PieChart, Table, Database, Users, AlertTriangle, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type VisualizationType = "bar" | "line" | "pie" | "table";
 
 const Sidebar = () => {
-  const [visualizationType, setVisualizationType] = useState<VisualizationType>("bar");
+  const [selectedVisualizations, setSelectedVisualizations] = useState<VisualizationType[]>(["bar"]);
+
+  const toggleVisualizationType = (type: VisualizationType) => {
+    setSelectedVisualizations(prev => {
+      if (prev.includes(type)) {
+        return prev.filter(item => item !== type);
+      } else {
+        return [...prev, type];
+      }
+    });
+  };
 
   return (
     <div className="h-full bg-sidebar flex flex-col border-r">
@@ -62,16 +72,17 @@ const Sidebar = () => {
           
           <div>
             <h3 className="text-sm font-medium mb-3">Visualization Type</h3>
-            <RadioGroup 
-              value={visualizationType}
-              onValueChange={(value) => setVisualizationType(value as VisualizationType)}
-              className="flex flex-col space-y-2"
-            >
+            <div className="flex flex-col space-y-2">
               <div className={cn(
                 "flex items-center space-x-2 rounded-md p-2 cursor-pointer transition-colors",
-                visualizationType === "bar" ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
-              )}>
-                <RadioGroupItem value="bar" id="bar" className="sr-only" />
+                selectedVisualizations.includes("bar") ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
+              )} onClick={() => toggleVisualizationType("bar")}>
+                <Checkbox 
+                  checked={selectedVisualizations.includes("bar")} 
+                  id="bar" 
+                  className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" 
+                  onCheckedChange={() => toggleVisualizationType("bar")}
+                />
                 <label htmlFor="bar" className="flex flex-1 items-center cursor-pointer">
                   <BarChart3 className="h-4 w-4 mr-2 text-primary" />
                   <span className="text-sm">Bar Chart</span>
@@ -80,9 +91,14 @@ const Sidebar = () => {
               
               <div className={cn(
                 "flex items-center space-x-2 rounded-md p-2 cursor-pointer transition-colors",
-                visualizationType === "line" ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
-              )}>
-                <RadioGroupItem value="line" id="line" className="sr-only" />
+                selectedVisualizations.includes("line") ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
+              )} onClick={() => toggleVisualizationType("line")}>
+                <Checkbox 
+                  checked={selectedVisualizations.includes("line")} 
+                  id="line" 
+                  className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" 
+                  onCheckedChange={() => toggleVisualizationType("line")}
+                />
                 <label htmlFor="line" className="flex flex-1 items-center cursor-pointer">
                   <LineChart className="h-4 w-4 mr-2 text-primary" />
                   <span className="text-sm">Line Chart</span>
@@ -91,9 +107,14 @@ const Sidebar = () => {
               
               <div className={cn(
                 "flex items-center space-x-2 rounded-md p-2 cursor-pointer transition-colors",
-                visualizationType === "pie" ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
-              )}>
-                <RadioGroupItem value="pie" id="pie" className="sr-only" />
+                selectedVisualizations.includes("pie") ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
+              )} onClick={() => toggleVisualizationType("pie")}>
+                <Checkbox 
+                  checked={selectedVisualizations.includes("pie")} 
+                  id="pie" 
+                  className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" 
+                  onCheckedChange={() => toggleVisualizationType("pie")}
+                />
                 <label htmlFor="pie" className="flex flex-1 items-center cursor-pointer">
                   <PieChart className="h-4 w-4 mr-2 text-primary" />
                   <span className="text-sm">Pie Chart</span>
@@ -102,15 +123,20 @@ const Sidebar = () => {
               
               <div className={cn(
                 "flex items-center space-x-2 rounded-md p-2 cursor-pointer transition-colors",
-                visualizationType === "table" ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
-              )}>
-                <RadioGroupItem value="table" id="table" className="sr-only" />
+                selectedVisualizations.includes("table") ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
+              )} onClick={() => toggleVisualizationType("table")}>
+                <Checkbox 
+                  checked={selectedVisualizations.includes("table")} 
+                  id="table" 
+                  className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" 
+                  onCheckedChange={() => toggleVisualizationType("table")}
+                />
                 <label htmlFor="table" className="flex flex-1 items-center cursor-pointer">
                   <Table className="h-4 w-4 mr-2 text-primary" />
                   <span className="text-sm">Table View</span>
                 </label>
               </div>
-            </RadioGroup>
+            </div>
           </div>
         </div>
       </div>
