@@ -1,33 +1,15 @@
 
 import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { Database, BarChart3, Users, AlertTriangle, ListChecks } from "lucide-react";
+import { BarChart3, LineChart, PieChart, Table, Database, Users, AlertTriangle, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-interface FilterOption {
-  id: string;
-  label: string;
-  checked: boolean;
-}
+type VisualizationType = "bar" | "line" | "pie" | "table";
 
 const Sidebar = () => {
-  const [filterOptions, setFilterOptions] = useState<FilterOption[]>([
-    { id: "team-engagement", label: "Team Engagement", checked: false },
-    { id: "risk-spikes", label: "Risk Spikes", checked: false },
-    { id: "performance-metrics", label: "Performance Metrics", checked: false },
-    { id: "customer-satisfaction", label: "Customer Satisfaction", checked: false },
-    { id: "project-timelines", label: "Project Timelines", checked: false },
-  ]);
-
-  const toggleFilterOption = (id: string) => {
-    setFilterOptions(
-      filterOptions.map((option) =>
-        option.id === id ? { ...option, checked: !option.checked } : option
-      )
-    );
-  };
+  const [visualizationType, setVisualizationType] = useState<VisualizationType>("bar");
 
   return (
     <div className="h-full bg-sidebar flex flex-col border-r">
@@ -61,29 +43,6 @@ const Sidebar = () => {
           </div>
           
           <div>
-            <h3 className="text-sm font-medium mb-3">Analytics Dimensions</h3>
-            <div className="space-y-2">
-              {filterOptions.map((option) => (
-                <div key={option.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={option.id}
-                    checked={option.checked}
-                    onCheckedChange={() => toggleFilterOption(option.id)}
-                  />
-                  <label
-                    htmlFor={option.id}
-                    className={cn("text-sm", 
-                      option.checked ? "font-medium text-primary" : "text-muted-foreground"
-                    )}
-                  >
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          <div>
             <h3 className="text-sm font-medium mb-3">Common Queries</h3>
             <div className="space-y-2">
               <button className="w-full text-left flex items-center py-2 px-3 rounded-md hover:bg-muted transition-colors text-sm">
@@ -100,13 +59,59 @@ const Sidebar = () => {
               </button>
             </div>
           </div>
-        </div>
-      </div>
-      
-      <div className="p-4 border-t">
-        <div className="text-xs text-muted-foreground">
-          <p>Connected to Analytics Database</p>
-          <p className="font-medium text-primary">Status: Demo Mode</p>
+          
+          <div>
+            <h3 className="text-sm font-medium mb-3">Visualization Type</h3>
+            <RadioGroup 
+              value={visualizationType}
+              onValueChange={(value) => setVisualizationType(value as VisualizationType)}
+              className="flex flex-col space-y-2"
+            >
+              <div className={cn(
+                "flex items-center space-x-2 rounded-md p-2 cursor-pointer transition-colors",
+                visualizationType === "bar" ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
+              )}>
+                <RadioGroupItem value="bar" id="bar" className="sr-only" />
+                <label htmlFor="bar" className="flex flex-1 items-center cursor-pointer">
+                  <BarChart3 className="h-4 w-4 mr-2 text-primary" />
+                  <span className="text-sm">Bar Chart</span>
+                </label>
+              </div>
+              
+              <div className={cn(
+                "flex items-center space-x-2 rounded-md p-2 cursor-pointer transition-colors",
+                visualizationType === "line" ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
+              )}>
+                <RadioGroupItem value="line" id="line" className="sr-only" />
+                <label htmlFor="line" className="flex flex-1 items-center cursor-pointer">
+                  <LineChart className="h-4 w-4 mr-2 text-primary" />
+                  <span className="text-sm">Line Chart</span>
+                </label>
+              </div>
+              
+              <div className={cn(
+                "flex items-center space-x-2 rounded-md p-2 cursor-pointer transition-colors",
+                visualizationType === "pie" ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
+              )}>
+                <RadioGroupItem value="pie" id="pie" className="sr-only" />
+                <label htmlFor="pie" className="flex flex-1 items-center cursor-pointer">
+                  <PieChart className="h-4 w-4 mr-2 text-primary" />
+                  <span className="text-sm">Pie Chart</span>
+                </label>
+              </div>
+              
+              <div className={cn(
+                "flex items-center space-x-2 rounded-md p-2 cursor-pointer transition-colors",
+                visualizationType === "table" ? "bg-blue-500/10 text-primary" : "hover:bg-muted"
+              )}>
+                <RadioGroupItem value="table" id="table" className="sr-only" />
+                <label htmlFor="table" className="flex flex-1 items-center cursor-pointer">
+                  <Table className="h-4 w-4 mr-2 text-primary" />
+                  <span className="text-sm">Table View</span>
+                </label>
+              </div>
+            </RadioGroup>
+          </div>
         </div>
       </div>
     </div>
